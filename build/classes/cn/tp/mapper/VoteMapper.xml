@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tp.mapper.VoteMapper">
+	<resultMap type="Vote" id="vMap">
+		<id column="vs_id" property="vsId"/>
+		<result column="vs_title" property="vsTitle"/>
+		<result column="optioncount" property="optionCount"/>
+		<result column="usercount" property="userCount"/>
+	</resultMap>
+	<select id="findVote" resultMap="vMap">
+		SELECT tb.vs_id,vs_title,optioncount,COUNT(DISTINCT vu_id) AS usercount
+		FROM vote_item vi
+		RIGHT JOIN (SELECT vs.vs_id,vs_title ,COUNT(vo_id) AS optioncount
+		FROM vote_subject vs
+		LEFT JOIN vote_option vo
+		ON vs.vs_id=vo.vs_id GROUP BY vs.vs_id) tb
+		ON vi.vs_id = tb.vs_id GROUP BY tb.vs_id
+	</select>
+	<select id="findOption" parameterType="int" resultType="Option">
+		SELECT vo.vo_option AS voOption,COUNT(vi.vi_id) AS optionAmount
+		FROM vote_item vi
+		RIGHT JOIN vote_option vo
+		ON vi.vo_id = vo.vo_id
+		WHERE vo.vs_id=#{vsId}
+		GROUP BY vo.vo_id
+	</select>
+	<select id="findByTitle" parameterType="String" resultMap="vMap">
+		SELECT tb.vs_id,vs_title,optioncount,COUNT(DISTINCT vu_id) AS usercount
+		FROM vote_item vi
+		RIGHT JOIN (SELECT vs.vs_id,vs_title ,COUNT(vo_id) AS optioncount
+		FROM vote_subject vs
+		LEFT JOIN vote_option vo
+		ON vs.vs_id=vo.vs_id GROUP BY vs.vs_id) tb
+		ON vi.vs_id = tb.vs_id WHERE vs_title LIKE '%${vsTitle}%' GROUP BY tb.vs_id
+	</select>
+</mapper>

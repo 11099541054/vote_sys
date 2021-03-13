@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tp.mapper.VoteOptionMapper">
+		<resultMap type="VoteOption" id="voMap">
+		<id column="vo_id" property="voId"/>
+		<result column="vo_option" property="voOption"/>
+		<association property="voteSubject" javaType="VoteSubject">
+			<id column="vs_id" property="vsId"/>
+		</association>
+	</resultMap>
+	<insert id="addOptions">
+		INSERT INTO vote_option VALUES 
+		<foreach collection="list" separator="," item="vo">
+			(0,#{vo.voOption},#{vo.vsId})
+		</foreach>
+	</insert>
+	<delete id="delOptions" parameterType="int">
+		DELETE FROM vote_option WHERE vs_id=#{vsId} 
+	</delete>
+</mapper>

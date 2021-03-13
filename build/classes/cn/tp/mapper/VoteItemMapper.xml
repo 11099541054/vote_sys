@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tp.mapper.VoteItemMapper">
+	<insert id="addItems">
+		INSERT INTO vote_item VALUES 
+		<foreach collection="list" separator="," item="vi">
+			(0,#{vi.vsId},#{vi.voId},#{vi.vuId})
+		</foreach>
+	</insert>
+	<select id="findItem" parameterType="VoteItem" resultType="int">
+		SELECT COUNT(vi_id) FROM vote_item WHERE vs_id=#{vsId} and vu_id=#{vuId}
+	</select>
+	<delete id="delItem" parameterType="int">
+	 	DELETE FROM vote_item WHERE vs_id=#{vsId}
+	</delete>
+</mapper>

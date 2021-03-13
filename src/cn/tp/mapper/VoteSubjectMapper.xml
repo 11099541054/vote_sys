@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tp.mapper.VoteSubjectMapper">
+	<resultMap type="VoteSubject" id="vsMap">
+		<id column="vs_id" property="vsId"/>
+		<result column="vs_title" property="vsTitle"/>
+		<result column="vs_type" property="vsType"/>
+		<collection property="options" ofType="VoteOption">
+			<id column="vo_id" property="voId"/>
+			<result column="vo_option" property="voOption"/>
+		</collection>
+	</resultMap>
+	<insert id="addSubject" parameterType="VoteSubject" useGeneratedKeys="true" keyProperty="vsId">
+		INSERT INTO vote_subject VALUES (0,#{vsTitle},#{vsType})
+	</insert>
+	<select id="findById" parameterType="int" resultMap="vsMap">
+		SELECT vs.vs_id,vs_title,vs_type,vo_id,vo_option FROM vote_subject vs INNER JOIN vote_option vo ON vs.vs_id = vo.vs_id WHERE vs.vs_id = #{vsId}
+	</select>
+	<select id="findByTitle" parameterType="String" resultType="int">
+		SELECT COUNT(vs_id) FROM vote_subject vs WHERE vs.vs_title = #{vsTitle}
+	</select>
+	<update id="updateSubject" parameterType="VoteSubject">
+		UPDATE vote_subject SET vs_title=#{vsTitle} ,vs_type=#{vsType} WHERE vs_id=#{vsId} 
+	</update>
+</mapper>

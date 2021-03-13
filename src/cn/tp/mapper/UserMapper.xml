@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tp.mapper.UserMapper">
+	<resultMap type="User" id="vuMap">
+		<id column="vu_id" property="id"/>
+		<result column="vu_name" property="username"/>
+		<result column="vu_password" property="password"/>
+		<result column="vu_flag" property="flag"/>
+	</resultMap>
+	<select id="findByName" parameterType="String" resultMap="vuMap">
+		SELECT vu_id,vu_name,vu_password,vu_flag FROM vote_user WHERE vu_name=#{username}
+	</select>
+	<insert id="add" parameterType="User">
+		INSERT INTO vote_user VALUES (0,#{username},#{password},1)
+	</insert>
+</mapper>
